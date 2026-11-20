@@ -178,6 +178,35 @@ page contradicts the old values, so no third party can override them.
 Record any figure that changed in that gateway's `changes` array. Never
 overwrite silently: the changelog is the asset.
 
+## Deploying to Vercel
+
+One required environment variable:
+
+```
+NEXT_PUBLIC_SITE_URL=https://onlinepayment.in
+```
+
+The build **fails** without it on any deploy (`next.config.ts` checks for
+`VERCEL_ENV`/`CI`). That guard exists because every canonical tag, sitemap URL
+and JSON-LD `@id` is derived from it, and the default is localhost.
+
+`DATABASE_URL` is optional. Nothing reads the database at build time, so the
+site deploys fine without it — the MDR notify-me form simply hides itself
+rather than rendering and failing.
+
+Nothing else to install or configure. No `vercel.json`, and Vercel's default
+Node satisfies Next 16's `>=20.9`.
+
+### Web Analytics
+
+`@vercel/analytics` is wired into the root layout. It is cookieless and loads
+from `/_vercel/insights/script.js`, which is same-origin — so it needs no
+consent banner and no CSP change.
+
+**It needs enabling once in the dashboard:** Project → Analytics → Enable Web
+Analytics, then redeploy. Until then the script 404s (harmlessly) and the
+console says so. Locally it always 404s; that route only exists on Vercel.
+
 ## Supabase
 
 The project is connected but **the `subscribers` table does not exist yet**, so

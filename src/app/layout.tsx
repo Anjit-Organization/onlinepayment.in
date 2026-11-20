@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google'
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from '@/common/config'
@@ -71,6 +72,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteFooter />
         <OrganizationJsonLd />
         <WebSiteJsonLd />
+        {/* Cookieless and same-origin: the script is served from
+            /_vercel/insights and the beacon posts back to the same origin, so
+            it needs no consent banner and no CSP relaxation. Inert off Vercel. */}
+        <Analytics />
       </body>
     </html>
   )
