@@ -21,7 +21,18 @@ const AI_CRAWLERS = [
   'Bingbot',
 ]
 
-const DISALLOW = ['/api/', '/_next/data/', '/search', '/*?']
+/**
+ * NOTE: there is deliberately no blanket `/*?` rule here.
+ *
+ * It looked like cheap crawl-trap insurance, but this site has no faceted or
+ * filter params, and it silently blocked our own Open Graph image — Next
+ * serves that at /opengraph-image?<hash>, so social and search crawlers that
+ * respect robots.txt could not fetch the preview card.
+ *
+ * If query-string surfaces ever appear, block those specific params rather
+ * than every URL that happens to carry one.
+ */
+const DISALLOW = ['/api/', '/_next/data/', '/search']
 
 export default function robots(): MetadataRoute.Robots {
   return {

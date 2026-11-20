@@ -197,6 +197,24 @@ rather than rendering and failing.
 Nothing else to install or configure. No `vercel.json`, and Vercel's default
 Node satisfies Next 16's `>=20.9`.
 
+### The canonical origin must match the domain Vercel serves
+
+If Vercel serves `www.` and `NEXT_PUBLIC_SITE_URL` is the apex (or the reverse),
+the site will not get indexed. Every sitemap URL 308-redirects and every
+canonical points at a redirecting URL, which Search Console reports as
+"Page with redirect" and skips.
+
+Pick one and make both sides agree:
+
+- **Apex primary** (matches `NEXT_PUBLIC_SITE_URL=https://onlinepayment.in`):
+  in Vercel → Settings → Domains, set `onlinepayment.in` as primary and make
+  `www` redirect to it. No redeploy needed.
+- **www primary**: set `NEXT_PUBLIC_SITE_URL=https://www.onlinepayment.in` and
+  redeploy.
+
+The build prints a warning when the two disagree, comparing
+`NEXT_PUBLIC_SITE_URL` against `VERCEL_PROJECT_PRODUCTION_URL`.
+
 ### Web Analytics
 
 `@vercel/analytics` is wired into the root layout. It is cookieless and loads

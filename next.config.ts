@@ -21,6 +21,25 @@ import type { NextConfig } from 'next'
         'Set NEXT_PUBLIC_SITE_URL=https://onlinepayment.in in your Vercel project settings.\n',
     )
   }
+  // A canonical origin that is not the domain actually served is the single
+  // most effective way to stop a site being indexed: every sitemap URL
+  // redirects, and every canonical points at a redirecting URL. Vercel exposes
+  // the production domain it serves, so compare them.
+  const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  if (isDeploy && vercelHost && !isLocalhost) {
+    const canonicalHost = new URL(siteUrl).host
+    if (canonicalHost !== vercelHost) {
+      console.warn(
+        `\n  WARNING: canonical origin does not match the deployed domain.\n` +
+          `    NEXT_PUBLIC_SITE_URL host : ${canonicalHost}\n` +
+          `    Vercel production domain  : ${vercelHost}\n` +
+          `  Every sitemap URL and canonical will point at ${canonicalHost},\n` +
+          `  which redirects. Google reports these as "Page with redirect" and\n` +
+          `  will not index them. Make the two match.\n`,
+      )
+    }
+  }
+
   if (!isDeploy && isLocalhost && process.env.NODE_ENV === 'production') {
     console.warn(
       '\n  WARNING: building with NEXT_PUBLIC_SITE_URL=' + siteUrl + '\n' +
