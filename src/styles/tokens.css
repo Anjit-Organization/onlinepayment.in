@@ -1,0 +1,155 @@
+/**
+ * Design tokens — the single source of truth. UI.md §2.
+ * Tailwind consumes these via @theme inline in globals.css; it does not redefine them.
+ * No raw hex is permitted in components.
+ *
+ * Every contrast ratio in the comments was computed, not estimated.
+ */
+
+:root {
+  /* ---- Surfaces ---- */
+  --c-bg: #f8fafc;
+  --c-surface: #ffffff;
+  --c-surface-sunk: #f1f5f9;
+  --c-surface-raised: #ffffff;
+
+  /* ---- Text ---- */
+  --c-fg: #020617;         /* 19.3:1 on --c-bg */
+  --c-fg-muted: #475569;   /* 7.2:1  */
+  /* Must clear 4.5:1 against the DARKEST surface it can land on, which is
+     --c-surface-sunk (zebra rows), not --c-bg. #64748b passed on the page
+     background but only reached 4.34:1 on a striped table row. */
+  --c-fg-subtle: #5c6b80;  /* 5.19 on bg, 5.43 on surface, 4.95 on sunk */
+
+  /* ---- Brand ---- */
+  --c-primary: #0f172a;
+  --c-primary-fg: #ffffff; /* 17.9:1 on --c-primary */
+  --c-accent: #0369a1;     /* 5.7:1 on --c-bg  */
+  --c-accent-fg: #ffffff;  /* 5.9:1 on --c-accent */
+  --c-accent-weak: #e0f2fe;
+
+  /* ---- Structure ----
+     border / border-strong are DECORATIVE (1.2:1 / 1.4:1).
+     Any control whose boundary is conveyed by its border must use
+     --c-border-control, the only border token meeting WCAG 1.4.11. UI.md §9. */
+  --c-border: #e2e8f0;
+  --c-border-strong: #cbd5e1;
+  --c-border-control: #8795ab; /* 3.0:1 on --c-surface */
+  --c-ring: #0369a1;
+
+  /* ---- Semantic data state (UI.md §7.1) ---- */
+  --c-fresh: #047857;      /* 5.2:1 — verified < 30 days */
+  --c-fresh-weak: #ecfdf5;
+  --c-warn: #b45309;       /* 4.8:1 — stale 30-60d, promo expiring */
+  --c-warn-weak: #fffbeb;
+  --c-danger: #b91c1c;     /* 6.2:1 — stale > 60d, fee increase */
+  --c-danger-weak: #fef2f2;
+  --c-info: #0369a1;
+  --c-info-weak: #e0f2fe;
+
+  /* ---- Spacing (4px base, dense scale) ---- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+
+  /* ---- Radius ---- */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* ---- Elevation (last resort; prefer borders) ---- */
+  --shadow-sm: 0 1px 2px rgb(2 6 23 / 0.05);
+  --shadow-md: 0 2px 8px rgb(2 6 23 / 0.07);
+  --shadow-lg: 0 8px 24px rgb(2 6 23 / 0.1);
+
+  /* ---- Motion (dial 2/10 — nothing moves unless it means something) ---- */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 300ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---- Type scale (fluid 375 -> 1440) ---- */
+  --t-display: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  --t-h2: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+  --t-h3: 1.125rem;
+  --t-body: 1rem;
+  --t-body-sm: 0.9375rem;
+  --t-caption: 0.8125rem;
+  --t-data-lg: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+  --t-data: 0.9375rem;
+
+  /* ---- Layout ---- */
+  --measure-prose: 68ch;
+  --lane-default: 1120px;
+  --lane-wide: 1440px;
+}
+
+/* Dark mode is not an inversion: shadows are removed, border contrast is raised. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --c-bg: #0b1220;
+    --c-surface: #111a2b;
+    --c-surface-sunk: #0a101c;
+    --c-surface-raised: #1a2437;
+
+    --c-fg: #f1f5f9;         /* 17.1:1 on --c-bg */
+    --c-fg-muted: #94a3b8;   /* 7.3:1  */
+    --c-fg-subtle: #7d8da3;  /* 5.5:1  */
+
+    --c-primary: #e2e8f0;
+    --c-primary-fg: #0b1220;
+    --c-accent: #38bdf8;     /* 8.7:1 on --c-bg; #0369a1 fails on dark */
+    --c-accent-fg: #04121f;  /* 8.8:1 on --c-accent */
+    --c-accent-weak: #0c2a3e;
+
+    --c-border: #243048;
+    --c-border-strong: #35445f;
+    --c-border-control: #5b6b85; /* 3.2:1 on --c-surface */
+    --c-ring: #38bdf8;
+
+    --c-fresh: #34d399;  --c-fresh-weak: #052e22;
+    --c-warn: #fbbf24;   --c-warn-weak: #2a1f05;
+    --c-danger: #f87171; --c-danger-weak: #2c0b0b;
+    --c-info: #38bdf8;   --c-info-weak: #0c2a3e;
+
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+  }
+}
+
+:root[data-theme='dark'] {
+  --c-bg: #0b1220;
+  --c-surface: #111a2b;
+  --c-surface-sunk: #0a101c;
+  --c-surface-raised: #1a2437;
+
+  --c-fg: #f1f5f9;
+  --c-fg-muted: #94a3b8;
+  --c-fg-subtle: #7d8da3;
+
+  --c-primary: #e2e8f0;
+  --c-primary-fg: #0b1220;
+  --c-accent: #38bdf8;
+  --c-accent-fg: #04121f;
+  --c-accent-weak: #0c2a3e;
+
+  --c-border: #243048;
+  --c-border-strong: #35445f;
+  --c-border-control: #5b6b85;
+  --c-ring: #38bdf8;
+
+  --c-fresh: #34d399;  --c-fresh-weak: #052e22;
+  --c-warn: #fbbf24;   --c-warn-weak: #2a1f05;
+  --c-danger: #f87171; --c-danger-weak: #2c0b0b;
+  --c-info: #38bdf8;   --c-info-weak: #0c2a3e;
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+}

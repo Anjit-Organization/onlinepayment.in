@@ -1,0 +1,124 @@
+{
+  "planName": "Standard",
+  "setupFeePaise": 0,
+  "annualMaintenancePaise": 0,
+  "monthlyFeePaise": 0,
+  "settlementCycleDays": 1,
+  "chargebackFeePaise": null,
+  "mdrRefundedOnRefund": null,
+  "notCharged": [
+    "Setup fee"
+  ],
+  "promos": [
+    {
+      "description": "0% platform fee on sales up to Rs 20 lakh, festive offer",
+      "endsAt": "2027-03-31",
+      "sourceUrl": "https://www.cashfree.com/payment-gateway-charges/"
+    }
+  ],
+  "changes": [],
+  "verifiedAt": "2026-11-20",
+  "sourceKind": "official_rate_card",
+  "slug": "cashfree",
+  "displayName": "Cashfree Payments",
+  "legalName": "Cashfree Payments India Private Limited",
+  "website": "https://www.cashfree.com",
+  "hqCity": "Bengaluru",
+  "state": "verified",
+  "verifiedBy": "Anjit Kumar Yadav",
+  "sourceUrl": "https://www.cashfree.com/payment-gateway-charges/",
+  "fees": [
+    {
+      "method": "upi",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Cashfree states only 'as per the applicable law'; this is a third-party figure"
+    },
+    {
+      "method": "credit_card_domestic",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Third-party sources give 1.95% as the standard rate; Cashfree's own page shows 1.95% and 2.0% in unlabelled columns"
+    },
+    {
+      "method": "debit_card",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "netbanking",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "wallet",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "credit_card_intl",
+      "rateBp": 299,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Visa and Mastercard"
+    },
+    {
+      "method": "international_card",
+      "rateBp": 299,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "amex",
+      "rateBp": 295,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "rupay_debit",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Third-party figure"
+    }
+  ],
+  "secondarySources": [
+    {
+      "label": "xFlow \u2014 Payment Gateway Charges in India: 2026 Comparison",
+      "url": "https://www.xflowpay.com/blog/payment-gateway-charges-comparison",
+      "covers": "the 1.95% standard domestic rate, and the UPI and RuPay rates Cashfree does not publish"
+    }
+  ]
+}

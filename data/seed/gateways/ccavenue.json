@@ -1,0 +1,119 @@
+{
+  "planName": "Standard",
+  "setupFeePaise": 0,
+  "annualMaintenancePaise": 120000,
+  "monthlyFeePaise": 0,
+  "settlementCycleDays": 3,
+  "chargebackFeePaise": null,
+  "mdrRefundedOnRefund": null,
+  "notCharged": [],
+  "promos": [],
+  "changes": [],
+  "verifiedAt": "2026-11-20",
+  "sourceKind": "secondary_source",
+  "slug": "ccavenue",
+  "displayName": "CCAvenue",
+  "legalName": "Infibeam Avenues Limited",
+  "website": "https://www.ccavenue.com",
+  "hqCity": "Mumbai",
+  "parentCompany": "Infibeam Avenues",
+  "state": "verified",
+  "verifiedBy": "Anjit Kumar Yadav",
+  "sourceUrl": "https://www.ccavenue.com/",
+  "fees": [
+    {
+      "method": "upi",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "credit_card_domestic",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "debit_card",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "rupay_debit",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "netbanking",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "wallet",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "amex",
+      "rateBp": 300,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Amex and Diners"
+    },
+    {
+      "method": "credit_card_intl",
+      "rateBp": 499,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "international_card",
+      "rateBp": 499,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    }
+  ],
+  "secondarySources": [
+    {
+      "label": "CompareCrest \u2014 Payment Gateway Charges in India (2026)",
+      "url": "https://comparecrest.com/payment-gateway-charges-in-india-complete-comparison/",
+      "covers": "all rates and the \u20b91,200 annual maintenance fee \u2014 CCAvenue publishes no public rate card; its pricing URL redirects to a registration form"
+    },
+    {
+      "label": "xFlow \u2014 Payment Gateway Charges in India: 2026 Comparison",
+      "url": "https://www.xflowpay.com/blog/payment-gateway-charges-comparison",
+      "covers": "the 2% domestic rate and higher Amex/Diners and international rates"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "planName": "Standard",
+  "setupFeePaise": 0,
+  "annualMaintenancePaise": 0,
+  "monthlyFeePaise": 0,
+  "settlementCycleDays": 2,
+  "chargebackFeePaise": null,
+  "mdrRefundedOnRefund": null,
+  "notCharged": [],
+  "promos": [],
+  "changes": [],
+  "verifiedAt": "2026-11-20",
+  "sourceKind": "secondary_source",
+  "slug": "easebuzz",
+  "displayName": "Easebuzz",
+  "legalName": "Easebuzz Private Limited",
+  "website": "https://easebuzz.in",
+  "hqCity": "Pune",
+  "state": "verified",
+  "verifiedBy": "Anjit Kumar Yadav",
+  "sourceUrl": "https://easebuzz.in/",
+  "fees": [
+    {
+      "method": "upi",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Easebuzz prices per merchant and publishes no standard rate card; 1.95% is a third-party figure"
+    },
+    {
+      "method": "credit_card_domestic",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Easebuzz prices per merchant and publishes no standard rate card; 1.95% is a third-party figure"
+    },
+    {
+      "method": "debit_card",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Easebuzz prices per merchant and publishes no standard rate card; 1.95% is a third-party figure"
+    },
+    {
+      "method": "rupay_debit",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Easebuzz prices per merchant and publishes no standard rate card; 1.95% is a third-party figure"
+    },
+    {
+      "method": "netbanking",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Easebuzz prices per merchant and publishes no standard rate card; 1.95% is a third-party figure"
+    },
+    {
+      "method": "wallet",
+      "rateBp": 195,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Easebuzz prices per merchant and publishes no standard rate card; 1.95% is a third-party figure"
+    },
+    {
+      "method": "international_card",
+      "rateBp": 300,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Third-party figure"
+    }
+  ],
+  "secondarySources": [
+    {
+      "label": "Sorlin \u2014 Easebuzz Payment Gateway Review 2026",
+      "url": "https://www.sorlin.io/easebuzz-payment-gateway-review",
+      "covers": "the 1.95% starting transaction rate \u2014 Easebuzz publishes no standard rate card"
+    },
+    {
+      "label": "Easebuzz \u2014 payment gateway explainer",
+      "url": "https://easebuzz.in/explainers/features-and-updates/online-payment-gateway/",
+      "covers": "Easebuzz's own statement that it averages 1.5% transaction charges and prices per merchant"
+    }
+  ]
+}

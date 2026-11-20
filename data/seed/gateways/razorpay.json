@@ -1,0 +1,115 @@
+{
+  "planName": "Standard",
+  "setupFeePaise": 0,
+  "annualMaintenancePaise": 0,
+  "monthlyFeePaise": 0,
+  "settlementCycleDays": 1,
+  "chargebackFeePaise": null,
+  "mdrRefundedOnRefund": null,
+  "notCharged": [
+    "Setup fee",
+    "Annual maintenance charge",
+    "Refund processing fee"
+  ],
+  "promos": [],
+  "changes": [],
+  "verifiedAt": "2026-11-20",
+  "sourceKind": "official_rate_card",
+  "slug": "razorpay",
+  "displayName": "Razorpay",
+  "legalName": "Razorpay Software Private Limited",
+  "website": "https://razorpay.com",
+  "hqCity": "Bengaluru",
+  "state": "verified",
+  "verifiedBy": "Anjit Kumar Yadav",
+  "sourceUrl": "https://razorpay.com/pricing/",
+  "fees": [
+    {
+      "method": "upi",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Zero MDR per RBI policy; Razorpay's 2% platform fee still applies"
+    },
+    {
+      "method": "credit_card_domestic",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Visa, Mastercard, Amex and Diners, debit and credit"
+    },
+    {
+      "method": "debit_card",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "rupay_debit",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Zero MDR; 2% platform fee applies"
+    },
+    {
+      "method": "netbanking",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "wallet",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "amex",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "credit_card_intl",
+      "rateBp": 300,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Page states 'up to 3%'"
+    },
+    {
+      "method": "international_card",
+      "rateBp": 300,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Page states 'up to 3%'"
+    }
+  ],
+  "secondarySources": []
+}

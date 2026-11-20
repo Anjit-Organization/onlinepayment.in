@@ -1,0 +1,72 @@
+{
+  "slug": "upi-mdr",
+  "title": "UPI MDR tracker",
+  "currentAnswer": "UPI MDR is not in effect. A proposed 0.4% charge on merchant payments above Rs 2,000 was scheduled for 15 October 2026, then deferred with no new start date announced. Payments of Rs 2,000 or less remain free, and person-to-person transfers remain free at all values.",
+  "currentStatus": "deferred",
+  "asOf": "2026-11-19",
+  "state": "verified",
+  "whoIsAffected": [
+    {
+      "group": "Person-to-person transfers",
+      "affected": "Not affected",
+      "note": "Free at all values. No change has been proposed."
+    },
+    {
+      "group": "Merchant payments up to Rs 2,000",
+      "affected": "Not affected",
+      "note": "Explicitly excluded from the proposed charge."
+    },
+    {
+      "group": "Merchant payments above Rs 2,000",
+      "affected": "Proposed, deferred",
+      "note": "A 0.4% MDR was proposed for this band. Deferred, with no announced start date."
+    },
+    {
+      "group": "Merchant-to-merchant payments",
+      "affected": "Reported proposal",
+      "note": "A flat Rs 5 per transaction has been reported but not announced publicly by NPCI."
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-11-19",
+      "headline": "Flat Rs 5 reported for merchant-to-merchant payments",
+      "detail": "Business Standard reported, citing two people aware of the matter, that merchant-to-merchant UPI payments are likely to carry a flat MDR of Rs 5 per transaction. NPCI has not announced this publicly.",
+      "status": "proposed",
+      "sourceUrl": "https://bfsi.eletsonline.com/upi-mdr-m2m-flat-fee/",
+      "sourceName": "Elets BFSI"
+    },
+    {
+      "date": "2026-10-20",
+      "headline": "0.4% proposal detailed, capped at \u20b9300",
+      "detail": "The proposed charge is 0.4% on person-to-merchant UPI payments above \u20b92,000, capped at \u20b9300 for payments of \u20b975,000 and above. It is a merchant-side cost and cannot be passed to the customer as a separate fee. Small merchants receiving up to \u20b91 lakh a month by UPI QR remain exempt.",
+      "status": "proposed",
+      "sourceUrl": "https://payu.in/blog/upi-mdr-2026-what-the-new-charge-means-for-businesses/",
+      "sourceName": "PayU"
+    },
+    {
+      "date": "2026-11-01",
+      "headline": "Still no agreed rollout date",
+      "detail": "The government, RBI and NPCI had not reached common ground on timing. Trader resistance and forthcoming state assembly elections were reported as factors, with one report suggesting the rollout could slip past the 2027 state elections.",
+      "status": "deferred",
+      "sourceUrl": "https://www.zeebiz.com/india/news-upi-mdr-charges-delay-government-rbi-npci-proposed-rules-2026-405745",
+      "sourceName": "Zee Business"
+    },
+    {
+      "date": "2026-10-10",
+      "headline": "Implementation deferred past Diwali",
+      "detail": "The UPI and Services Steering Committee postponed the launch, citing the festive season and operational difficulties. No replacement date was given.",
+      "status": "deferred",
+      "sourceUrl": "https://vajiramandravi.com/current-affairs/upi-mdr-2026/",
+      "sourceName": "Vajiram & Ravi"
+    },
+    {
+      "date": "2026-10-15",
+      "headline": "Original scheduled start date",
+      "detail": "A 0.4% MDR on selected person-to-merchant UPI transactions above Rs 2,000 was originally scheduled to take effect on this date. It did not come into force.",
+      "status": "superseded",
+      "sourceUrl": "https://vajiramandravi.com/current-affairs/upi-mdr-2026/",
+      "sourceName": "Vajiram & Ravi"
+    }
+  ]
+}

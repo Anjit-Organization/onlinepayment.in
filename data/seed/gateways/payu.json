@@ -1,0 +1,121 @@
+{
+  "planName": "Standard",
+  "setupFeePaise": 0,
+  "annualMaintenancePaise": 0,
+  "monthlyFeePaise": 0,
+  "settlementCycleDays": 2,
+  "chargebackFeePaise": null,
+  "mdrRefundedOnRefund": null,
+  "notCharged": [
+    "Setup fee",
+    "Annual maintenance fee",
+    "Onboarding fee"
+  ],
+  "promos": [],
+  "changes": [],
+  "verifiedAt": "2026-11-20",
+  "sourceKind": "official_rate_card",
+  "slug": "payu",
+  "displayName": "PayU",
+  "legalName": "PayU Payments Private Limited",
+  "website": "https://payu.in",
+  "hqCity": "Gurugram",
+  "parentCompany": "Prosus",
+  "state": "verified",
+  "verifiedBy": "Anjit Kumar Yadav",
+  "sourceUrl": "https://payu.in/pricing/",
+  "fees": [
+    {
+      "method": "upi",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "PayU does not publish a UPI rate; this is a third-party figure"
+    },
+    {
+      "method": "credit_card_domestic",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Page lists Visa and Mastercard at 2% without splitting credit and debit"
+    },
+    {
+      "method": "debit_card",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Page lists Visa and Mastercard at 2% without splitting credit and debit"
+    },
+    {
+      "method": "netbanking",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "wallet",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "amex",
+      "rateBp": 300,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "emi",
+      "rateBp": 300,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "international_card",
+      "rateBp": 300,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "rupay_debit",
+      "rateBp": 200,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Third-party figure; not published by PayU"
+    }
+  ],
+  "secondarySources": [
+    {
+      "label": "xFlow \u2014 Payment Gateway Charges in India: 2026 Comparison",
+      "url": "https://www.xflowpay.com/blog/payment-gateway-charges-comparison",
+      "covers": "UPI and RuPay debit rates, which PayU does not publish ('varies by business type and transaction volume')"
+    }
+  ]
+}

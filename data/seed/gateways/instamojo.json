@@ -1,0 +1,101 @@
+{
+  "planName": "Standard",
+  "setupFeePaise": 0,
+  "annualMaintenancePaise": 0,
+  "monthlyFeePaise": 0,
+  "settlementCycleDays": 3,
+  "chargebackFeePaise": null,
+  "mdrRefundedOnRefund": null,
+  "notCharged": [],
+  "promos": [],
+  "changes": [],
+  "verifiedAt": "2026-11-20",
+  "sourceKind": "official_rate_card",
+  "slug": "instamojo",
+  "displayName": "Instamojo",
+  "legalName": "Instamojo Technologies Private Limited",
+  "website": "https://www.instamojo.com",
+  "hqCity": "Bengaluru",
+  "state": "verified",
+  "verifiedBy": "Anjit Kumar Yadav",
+  "sourceUrl": "https://www.instamojo.com/pricing/",
+  "fees": [
+    {
+      "method": "upi",
+      "rateBp": 200,
+      "flatFeePaise": 300,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Instamojo's published Payment Links rate of 2% + \u20b93 per transaction"
+    },
+    {
+      "method": "credit_card_domestic",
+      "rateBp": 200,
+      "flatFeePaise": 300,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Payment Links rate; corporate cards are 3% + \u20b93"
+    },
+    {
+      "method": "debit_card",
+      "rateBp": 200,
+      "flatFeePaise": 300,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "netbanking",
+      "rateBp": 200,
+      "flatFeePaise": 300,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "wallet",
+      "rateBp": 200,
+      "flatFeePaise": 300,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Published as 2% + \u20b93 per transaction"
+    },
+    {
+      "method": "rupay_debit",
+      "rateBp": 200,
+      "flatFeePaise": 300,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "credit_card_intl",
+      "rateBp": 300,
+      "flatFeePaise": 300,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Corporate and premium card rate"
+    },
+    {
+      "method": "international_card",
+      "rateBp": 300,
+      "flatFeePaise": 300,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    }
+  ],
+  "secondarySources": []
+}

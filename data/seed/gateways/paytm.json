@@ -1,0 +1,84 @@
+{
+  "planName": "Standard",
+  "setupFeePaise": 0,
+  "annualMaintenancePaise": 0,
+  "monthlyFeePaise": 0,
+  "settlementCycleDays": 1,
+  "chargebackFeePaise": null,
+  "mdrRefundedOnRefund": null,
+  "notCharged": [
+    "Setup fee",
+    "Annual maintenance charge"
+  ],
+  "promos": [],
+  "changes": [],
+  "verifiedAt": "2026-11-20",
+  "sourceKind": "official_rate_card",
+  "slug": "paytm",
+  "displayName": "Paytm Payment Gateway",
+  "legalName": "Paytm Payments Services Limited",
+  "website": "https://www.paytmpayments.com",
+  "hqCity": "Noida",
+  "parentCompany": "One97 Communications",
+  "state": "verified",
+  "verifiedBy": "Anjit Kumar Yadav",
+  "sourceUrl": "https://www.paytmpayments.com/pricing",
+  "fees": [
+    {
+      "method": "upi",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "Single blended rate applied to all transaction types"
+    },
+    {
+      "method": "credit_card_domestic",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "debit_card",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "rupay_debit",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "netbanking",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    },
+    {
+      "method": "wallet",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null
+    }
+  ],
+  "secondarySources": []
+}

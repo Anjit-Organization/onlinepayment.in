@@ -1,0 +1,100 @@
+{
+  "planName": "Standard",
+  "setupFeePaise": 0,
+  "annualMaintenancePaise": 0,
+  "monthlyFeePaise": 0,
+  "settlementCycleDays": null,
+  "chargebackFeePaise": null,
+  "mdrRefundedOnRefund": null,
+  "notCharged": [
+    "Setup fee",
+    "Annual maintenance fee"
+  ],
+  "promos": [
+    {
+      "description": "Super Savings Offer: gateway fee waived for a limited period",
+      "endsAt": null,
+      "sourceUrl": "https://business.phonepe.com/payment-gateway"
+    }
+  ],
+  "changes": [],
+  "verifiedAt": "2026-11-20",
+  "sourceKind": "official_rate_card",
+  "slug": "phonepe",
+  "displayName": "PhonePe Payment Gateway",
+  "legalName": "PhonePe Private Limited",
+  "website": "https://business.phonepe.com",
+  "hqCity": "Bengaluru",
+  "state": "verified",
+  "verifiedBy": "Anjit Kumar Yadav",
+  "sourceUrl": "https://business.phonepe.com/payment-gateway",
+  "fees": [
+    {
+      "method": "upi",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "PhonePe publishes no per-method rates; 1.99% is the standard plan rate per third-party sources, currently waived under a limited-period offer"
+    },
+    {
+      "method": "credit_card_domestic",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "PhonePe publishes no per-method rates; 1.99% is the standard plan rate per third-party sources, currently waived under a limited-period offer"
+    },
+    {
+      "method": "debit_card",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "PhonePe publishes no per-method rates; 1.99% is the standard plan rate per third-party sources, currently waived under a limited-period offer"
+    },
+    {
+      "method": "rupay_debit",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "PhonePe publishes no per-method rates; 1.99% is the standard plan rate per third-party sources, currently waived under a limited-period offer"
+    },
+    {
+      "method": "netbanking",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "PhonePe publishes no per-method rates; 1.99% is the standard plan rate per third-party sources, currently waived under a limited-period offer"
+    },
+    {
+      "method": "wallet",
+      "rateBp": 199,
+      "flatFeePaise": null,
+      "minFeePaise": null,
+      "maxFeePaise": null,
+      "bandMinPaise": null,
+      "bandMaxPaise": null,
+      "note": "PhonePe publishes no per-method rates; 1.99% is the standard plan rate per third-party sources, currently waived under a limited-period offer"
+    }
+  ],
+  "secondarySources": [
+    {
+      "label": "Selzix \u2014 PhonePe Payment Gateway Charges (2026)",
+      "url": "https://selzix.com/blog/phonepe-payment-gateway-charges",
+      "covers": "the 1.99% standard rate, since PhonePe's page shows only the promotional 'FREE' price with no post-offer rate"
+    }
+  ]
+}
