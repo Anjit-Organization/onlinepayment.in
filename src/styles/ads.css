@@ -1,0 +1,173 @@
+/**
+ * Ad slot sizing.
+ *
+ * Every height here is a *reserved* height: committed before any ad script
+ * runs, and set to the tallest creative the slot can serve at that breakpoint.
+ * Responsive values are media queries, never JS measurement — measuring in JS
+ * means the box resizes after paint, which is the exact layout shift this file
+ * exists to prevent. Our CLS budget is 0.05 and ad-driven shift is the most
+ * common way to blow it. TECHNICAL.md §6.2, §6.3.
+ *
+ * The reservation sits on [data-ad-host], the inner mount box, NOT on
+ * .ad-slot. The slot also renders an "Advertisement" label, and a min-height on
+ * the outer box would be shared between label and creative — so a 100px
+ * creative in a 100px box would push the box taller on fill, which is the shift
+ * again. The host reserves the creative; the label adds its own height once, at
+ * first paint, before anything loads.
+ *
+ * These values mirror AD_INVENTORY in modules/ads/ads.config.ts. The `ads` unit
+ * test parses this file and fails if the two drift apart.
+ */
+
+@layer components {
+  .ad-slot {
+    display: block;
+    margin-inline: auto;
+    overflow: hidden;
+    /* Nothing inside a slot should ever stack over site chrome. */
+    isolation: isolate;
+  }
+
+  /**
+   * The label. An ad must be distinguishable from editorial content — that is
+   * an AdSense policy requirement, and the honest thing to do on a site whose
+   * whole claim is that its numbers are independent. "Advertisement" is one of
+   * the few labels AdSense permits.
+   */
+  .ad-slot::before {
+    content: 'Advertisement';
+    display: block;
+    margin-block-end: 0.25rem;
+    color: var(--c-fg-subtle);
+    font-size: var(--t-caption);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .ad-slot [data-ad-host] {
+    display: block;
+    width: 100%;
+  }
+
+  /**
+   * An unfilled slot collapses — label and all — but only after AdMount has
+   * waited out its grace period and written data-unfilled. Keeping the decision
+   * in CSS means no JS ever writes a height mid-frame.
+   */
+  .ad-slot:has([data-unfilled='true']) {
+    min-height: 0;
+    height: 0;
+  }
+
+  .ad-slot:has([data-unfilled='true'])::before {
+    display: none;
+  }
+
+  /**
+   * The reserved height has to be undone on the host too, not just clipped by
+   * the outer box. The slot-specific selectors below are (0,3,0), and several
+   * sit inside media queries that come later in the file, so this rule carries
+   * an extra attribute to reach (0,4,0) and win regardless of source order.
+   */
+  .ad-slot[data-slot]:has([data-unfilled='true']) [data-ad-host] {
+    min-height: 0;
+    height: 0;
+    content-visibility: visible;
+  }
+
+  /**
+   * Below-fold slots skip layout and paint until they are near the viewport.
+   * contain-intrinsic-size must match the reserved height, or the skipped box
+   * is the wrong size and the shift is back.
+   */
+  .ad-slot[data-placement='in-content'] [data-ad-host],
+  .ad-slot[data-placement='sidebar'] [data-ad-host],
+  .ad-slot[data-placement='footer'] [data-ad-host] {
+    content-visibility: auto;
+  }
+
+  /* ------------------------------------------------------------- mobile ---- */
+
+  /* 320x100 */
+  .ad-slot[data-slot='in-content-1'] [data-ad-host] {
+    min-height: 100px;
+    contain-intrinsic-size: auto 100px;
+  }
+
+  /* 300x250 */
+  .ad-slot[data-slot='in-content-2'] [data-ad-host] {
+    min-height: 250px;
+    contain-intrinsic-size: auto 250px;
+  }
+
+  /* 320x100 */
+  .ad-slot[data-slot='footer'] [data-ad-host] {
+    min-height: 100px;
+    contain-intrinsic-size: auto 100px;
+  }
+
+  /**
+   * Not served below 1280px (§6.3). display:none means its
+   * IntersectionObserver never fires, so no ad is requested either — hiding a
+   * loaded unit would still have cost the request.
+   */
+  .ad-slot[data-slot='sidebar-sticky'] {
+    display: none;
+  }
+
+  /* 320x50, sticky to the bottom. Shipped disabled in config; see §6.5. */
+  .ad-slot[data-slot='anchor'] {
+    position: fixed;
+    inset-block-end: 0;
+    inset-inline: 0;
+    z-index: 40;
+    background-color: var(--c-surface);
+    border-block-start: 1px solid var(--c-border);
+  }
+
+  .ad-slot[data-slot='anchor'] [data-ad-host] {
+    min-height: 50px;
+  }
+
+  /* ------------------------------------------------------------ desktop ---- */
+
+  @media (width >= 768px) {
+    /* 336x280 */
+    .ad-slot[data-slot='in-content-1'] [data-ad-host] {
+      min-height: 280px;
+      contain-intrinsic-size: auto 280px;
+    }
+
+    /* fluid x 280 */
+    .ad-slot[data-slot='in-content-2'] [data-ad-host] {
+      min-height: 280px;
+      contain-intrinsic-size: auto 280px;
+    }
+
+    /* 728x90 */
+    .ad-slot[data-slot='footer'] [data-ad-host] {
+      min-height: 90px;
+      contain-intrinsic-size: auto 90px;
+    }
+
+    /* Mobile-only format (§6.3). */
+    .ad-slot[data-slot='anchor'] {
+      display: none;
+    }
+  }
+
+  @media (width >= 1280px) {
+    /* 300x600, sticky beside the content. */
+    .ad-slot[data-slot='sidebar-sticky'] {
+      display: block;
+      position: sticky;
+      inset-block-start: 5rem;
+    }
+
+    .ad-slot[data-slot='sidebar-sticky'] [data-ad-host] {
+      min-height: 600px;
+      contain-intrinsic-size: auto 600px;
+    }
+  }
+}

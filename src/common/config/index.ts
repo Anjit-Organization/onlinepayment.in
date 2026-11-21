@@ -33,6 +33,30 @@ const schema = z
     ADS_PROVIDER: z.enum(['adsense', 'ezoic', 'noop']).default('noop'),
     ADSENSE_CLIENT_ID: z.string().optional(),
 
+    /**
+     * Maps our slot ids to the active provider's own unit ids:
+     *
+     *   in-content-1:1234567890,in-content-2:2345678901,footer:3456789012
+     *
+     * Provider-agnostic on purpose. AdSense wants a `data-ad-slot`, Ezoic wants
+     * a numeric placeholder id, and neither spelling should reach a template.
+     * A slot with no entry here renders nothing at all rather than an empty
+     * reserved box. Parsed in modules/ads/ads.config.ts. TECHNICAL.md §6.
+     */
+    AD_UNIT_IDS: z.string().optional(),
+
+    /**
+     * Which consent layer is in place. `none` is the default and, by the
+     * refinement below, is incompatible with ads being on.
+     *
+     *   google — Google Privacy & messaging, configured in the AdSense UI and
+     *            delivered through the AdSense tag. Nothing to load here.
+     *   custom — a third-party CMP from Google's certified list, loaded from
+     *            CONSENT_CMP_SRC.
+     */
+    CONSENT_PROVIDER: z.enum(['google', 'custom', 'none']).default('none'),
+    CONSENT_CMP_SRC: z.string().url().optional(),
+
     PLAUSIBLE_HOST: z.string().url().optional(),
 
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
@@ -40,6 +64,30 @@ const schema = z
   .refine((v) => v.ADS_PROVIDER !== 'adsense' || !!v.ADSENSE_CLIENT_ID, {
     message: 'ADSENSE_CLIENT_ID is required when ADS_PROVIDER=adsense',
     path: ['ADSENSE_CLIENT_ID'],
+  })
+  .refine((v) => v.CONSENT_PROVIDER !== 'custom' || !!v.CONSENT_CMP_SRC, {
+    message: 'CONSENT_CMP_SRC is required when CONSENT_PROVIDER=custom',
+    path: ['CONSENT_CMP_SRC'],
+  })
+  /**
+   * Ads may not be switched on without a consent layer.
+   *
+   * Google requires a Google-certified CMP integrated with the IAB TCF to serve
+   * personalized ads in the EEA, the UK and Switzerland. Without one, that
+   * traffic is eligible for non-personalized or limited ads at best, and the
+   * publisher is carrying the legal exposure. We cannot detect an EEA visitor
+   * at build time, so the gate is unconditional: declare a CMP or keep ads off.
+   *
+   * A loud build failure is the right failure here. The alternative is shipping
+   * ads that look fine from India and are a problem the moment someone in
+   * Dublin loads the page.
+   */
+  .refine((v) => !(v.ADS_ENABLED === 'true' && v.ADS_PROVIDER !== 'noop') || v.CONSENT_PROVIDER !== 'none', {
+    message:
+      'Ads are enabled but CONSENT_PROVIDER is "none". Serving ads in the EEA, the UK or ' +
+      'Switzerland requires a Google-certified CMP. Set CONSENT_PROVIDER=google (configure the ' +
+      'message in AdSense under Privacy & messaging) or =custom with CONSENT_CMP_SRC.',
+    path: ['CONSENT_PROVIDER'],
   })
   /**
    * Fail the build rather than ship localhost canonicals.
@@ -90,6 +138,13 @@ export const isProd = env.NODE_ENV === 'production'
  */
 export const subscriptionsEnabled = !!env.DATABASE_URL
 export const adsEnabled = env.ADS_ENABLED === 'true' && env.ADS_PROVIDER !== 'noop'
+
+/**
+ * The consent layer is only ever relevant when ads are. Nothing else on the
+ * site needs consent: our analytics is cookieless and same-origin.
+ */
+export const consentProviderId = adsEnabled ? env.CONSENT_PROVIDER : 'none'
+export const consentCmpSrc = env.CONSENT_CMP_SRC ?? null
 
 /** Canonical origin, no trailing slash. */
 export const SITE_URL = env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '')

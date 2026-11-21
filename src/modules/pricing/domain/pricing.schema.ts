@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { FEE_METHODS, SOURCE_KINDS, VERIFICATION_STATES } from './pricing.constants'
 
 /**
  * The seed file is the authoring format and the source of truth for pricing.
@@ -10,64 +11,16 @@ import { z } from 'zod'
  * for Phase 3, when the public API and changelog queries need real indexes.
  *
  * Every record is validated at build time. An invalid seed fails the build.
+ *
+ * The allowed VALUES live in ./pricing.constants, which imports nothing, so the
+ * browser can read a label without downloading a validator. The enums below are
+ * built from those arrays: adding a method there is still the only way to make
+ * one valid here.
  */
 
-export const FEE_METHODS = [
-  'upi',
-  'credit_card_domestic',
-  'credit_card_intl',
-  'amex',
-  'debit_card',
-  'rupay_debit',
-  'netbanking',
-  'wallet',
-  'emi',
-  'international_card',
-] as const
+export const verificationState = z.enum(VERIFICATION_STATES)
 
-export type FeeMethod = (typeof FEE_METHODS)[number]
-
-export const METHOD_LABEL: Record<FeeMethod, string> = {
-  upi: 'UPI',
-  credit_card_domestic: 'Credit card (domestic)',
-  credit_card_intl: 'Credit card (international)',
-  amex: 'American Express / Diners',
-  debit_card: 'Debit card',
-  rupay_debit: 'RuPay debit',
-  netbanking: 'Net banking',
-  wallet: 'Wallets',
-  emi: 'EMI',
-  international_card: 'International cards',
-}
-
-/**
- * Verification state. TECHNICAL §9.3: scraped or drafted data never publishes
- * directly — a human promotes it. A `draft` record renders (so it can be
- * reviewed in situ) but is noindex and excluded from the sitemap.
- */
-export const verificationState = z.enum(['draft', 'verified'])
-export type VerificationState = z.infer<typeof verificationState>
-
-export const sourceKind = z.enum([
-  'official_rate_card',
-  'written_quote',
-  'merchant_dashboard',
-  'support_email',
-  /**
-   * Used where a provider publishes no rate card, or publishes one too
-   * ambiguous to read. The figure still carries a named, linked source — it is
-   * simply not the provider's own document, and the page says so.
-   */
-  'secondary_source',
-])
-
-export const SOURCE_KIND_LABEL: Record<z.infer<typeof sourceKind>, string> = {
-  official_rate_card: 'Official rate card',
-  written_quote: 'Written quote',
-  merchant_dashboard: 'Merchant dashboard',
-  support_email: 'Written confirmation from support',
-  secondary_source: 'Third-party source',
-}
+export const sourceKind = z.enum(SOURCE_KINDS)
 
 /** A named, linked source and what it is being relied on for. */
 const secondarySource = z.object({

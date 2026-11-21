@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { formatINR } from '@/common/money'
-import { METHOD_LABEL } from '@/modules/pricing'
+import { METHOD_LABEL } from '@/modules/pricing/client'
 import type { CalcInput, GatewayCost, RankedCost } from '../domain/calculator'
 import { RankedResult } from './ranked-result'
 

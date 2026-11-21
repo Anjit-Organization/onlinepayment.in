@@ -2,8 +2,9 @@ import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/common/config'
 import { SCENARIOS, USE_CASES } from '@/modules/calculator'
 import { allPairs, pairSlug } from '@/modules/compare'
-import { getVerifiedGateways } from '@/modules/pricing'
+import { METHOD_PAGES, getVerifiedGateways } from '@/modules/pricing'
 import { getTracker } from '@/modules/regulatory'
+import { TOOLS } from '@/modules/tools'
 import { STATIC_ROUTES } from '@/modules/seo'
 
 /**
@@ -88,6 +89,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       })
     }
 
+    // Method pages rank every provider on one method, so they publish on the
+    // same condition as the other cross-provider surfaces.
+    for (const m of METHOD_PAGES) {
+      entries.push({
+        url: `${SITE_URL}/charges/${m.slug}/`,
+        lastModified: new Date(newest),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      })
+    }
+
     entries.push({
       url: `${SITE_URL}/best/`,
       lastModified: new Date(newest),
@@ -102,6 +114,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.8,
       })
     }
+  }
+
+  /**
+   * Tool pages. Two of the four render cross-provider pricing tables, so those
+   * publish on the same condition as the other comparison surfaces; the
+   * signature verifier and the IFSC checker carry no pricing and publish
+   * unconditionally. lastModified is the tool's own content date.
+   */
+  const NEEDS_VERIFIED_PRICING = new Set(['bin-lookup', 'settlement-calculator'])
+
+  entries.push({
+    url: `${SITE_URL}/tools/`,
+    lastModified: new Date(
+      TOOLS.map((t) => t.lastModified)
+        .sort()
+        .at(-1)!,
+    ),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  })
+
+  for (const t of TOOLS) {
+    if (NEEDS_VERIFIED_PRICING.has(t.slug) && !canPublishHubs) continue
+    entries.push({
+      url: `${SITE_URL}/tools/${t.slug}/`,
+      lastModified: new Date(t.lastModified),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    })
   }
 
   const tracker = getTracker('upi-mdr')

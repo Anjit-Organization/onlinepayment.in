@@ -7,7 +7,7 @@
  * actually changes. Fabricated lastmod values get the whole sitemap ignored.
  * Data-backed pages take theirs from the data's verifiedAt instead.
  */
-export type SitemapSegment = 'static' | 'charges' | 'calculator' | 'upi'
+export type SitemapSegment = 'static' | 'charges' | 'calculator' | 'upi' | 'tools'
 
 export type StaticRoute = {
   path: string

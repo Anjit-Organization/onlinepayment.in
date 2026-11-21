@@ -44,8 +44,12 @@ export default tseslint.config(
         {
           patterns: [
             {
-              group: ['@/modules/*/*'],
-              message: 'Import from the module barrel instead: @/modules/<name>',
+              // `@/modules/<name>/client` is a deliberate second entry point:
+              // a client-safe surface with no node: imports. Everything else
+              // inside a module stays private.
+              group: ['@/modules/*/*', '!@/modules/*/client'],
+              message:
+                'Import from the module barrel (@/modules/<name>) or its client entry (@/modules/<name>/client).',
             },
           ],
         },

@@ -8,7 +8,7 @@ import {
   computeFee,
   paise,
 } from '@/common/money'
-import type { Fee, FeeMethod, GatewaySeed } from '@/modules/pricing'
+import type { Fee, FeeMethod, GatewaySeed } from '@/modules/pricing/client'
 
 /**
  * The true-cost engine. BUILD-PLAN T1.

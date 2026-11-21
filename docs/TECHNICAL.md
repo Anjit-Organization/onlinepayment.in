@@ -88,6 +88,7 @@ onlinepayment-portal/
 ├── scripts/
 │   ├── verify-pricing.ts             # scrape + diff + flag for human confirm
 │   ├── check-ssr.ts                  # CI crawlability assertions (§5.1)
+│   ├── check-bundle.mjs              # client-bundle guard (§5.4)
 │   └── refresh-views.ts
 ├── tests/
 │   ├── unit/
@@ -414,6 +415,60 @@ Hard constraints regardless of policy:
 - **AdSense Auto Ads are explicitly not used.** They inject units at arbitrary positions, which breaks both the CLS guarantee and the placement policy above. Manual slots only.
 - Ads require a cookie-consent layer for EEA traffic. Our analytics choice (Plausible/Umami) needs none, so **consent is loaded only when an ad slot is actually enabled on the page** — most of the high-value pages stay consent-free and fast.
 
+
+### 6.6 As built
+
+Two deliberate departures from the spec above, both verified in a browser
+against a production build:
+
+**The provider script is rendered from `AdSlot`, not the root layout.** §6.2
+says "mounted in the root layout, never per-slot". The root layout cannot know
+the page type, so mounting it there loads ad JS on `/charges/*`, `/compare/*`
+and the calculator — the zero-slot, highest-intent pages whose CWV budget this
+module exists to protect, and the pages §6.5 wants consent-free. At
+`lazyOnload` Next emits no script tag during SSR and dedupes by src on
+injection, so the single-script guarantee holds: a page with three enabled
+slots renders one `<script id="adsbygoogle-js">`.
+
+**The reserved height sits on the inner mount box (`[data-ad-host]`), not on
+`.ad-slot`.** The slot renders an "Advertisement" label, which AdSense policy
+wants and which this site's independence claim wants more. A `min-height` on
+the outer box would be shared between label and creative, so a 100px creative
+in a 100px box pushes the box taller on fill — the shift again. The host
+reserves the creative; the label adds its own height once, before anything
+loads.
+
+Sizes live in two places that nothing in the type system connects:
+`AD_INVENTORY` and `src/styles/ads.css`. `tests/unit/ads.test.ts` parses the
+stylesheet and fails if they drift.
+
+**The consent layer deliberately renders no banner.** Google requires a
+Google-certified CMP integrated with the IAB TCF to serve personalized ads to
+the EEA, the UK and Switzerland; a dialog we write ourselves is not certified,
+and traffic behind one is eligible for non-personalized or limited ads at best.
+So `modules/ads/consent/` has three providers and none of them draws UI:
+
+| `CONSENT_PROVIDER` | What loads |
+|---|---|
+| `google` (recommended) | Nothing. Privacy & messaging is configured in the AdSense UI and delivered through the AdSense tag. |
+| `custom` | A certified third-party CMP from `CONSENT_CMP_SRC`, plus Consent Mode v2 defaults. |
+| `none` (default) | Nothing — and `ADS_ENABLED=true` with this set **fails the boot**. |
+
+`CONSENT_PROVIDER=google` is a declaration that the message exists in AdSense.
+Nothing in this codebase can verify it.
+
+Consent Mode v2 defaults grant storage globally and deny all four signals for
+the 32 in-scope regions (EU 27 + IS/LI/NO + GB + CH), region-scoped so the
+denial wins regardless of call order. India is deliberately not in that list;
+DPDP is a separate mechanism and this is not it.
+
+Both consent scripts are `afterInteractive` against the ad tag's `lazyOnload`.
+`beforeInteractive` is earlier but, in the App Router, only works from the root
+layout — which would load consent on the zero-slot pages. Measured on
+`/tools/ifsc/`: consent defaults, then CMP at 10ms, then the ad tag at 1014ms,
+one tag of each kind across two slots. On `/charges/razorpay/` with ads fully
+enabled: no slots, no ad tag, no third-party scripts at all.
+
 ---
 
 ## 7. Database design and optimisation
@@ -574,6 +629,7 @@ Weighted by what actually breaks the business, not by coverage percentage.
 | Domain logic | Vitest | Effective-dating, verdict computation, slot policy |
 | Repositories | Vitest + Testcontainers Postgres | Real SQL against a real schema. No mocked DB. |
 | SEO contracts | Vitest + `scripts/check-ssr.ts` | Raw-HTML assertions, one `<h1>`, canonical, JSON-LD validity (§5.1) |
+| Client bundle | `scripts/check-bundle.mjs` | Per-route gzipped budget, and no server-only module (zod, `node:fs`, drizzle, seed records) in any shipped chunk |
 | Components | React Testing Library | Fee tables, AdSlot reservation, VerifiedAt rendering |
 | E2E | Playwright | Calculator flow, scenario URL round-trip, mobile layout |
 | Visual | Playwright screenshots | The four key templates, light + dark |
@@ -649,14 +705,15 @@ on: pull_request
   4. unit + integration   (vitest, Testcontainers Postgres)
   5. build                (next build)
   6. check-ssr            (raw-HTML assertions — §5.1)      ← blocking
-  7. lighthouse-ci        (budgets from §5.4)               ← blocking
-  8. e2e                  (playwright)
+  7. check-bundle         (client-bundle guard — §5.4)      ← blocking
+  8. lighthouse-ci        (budgets from §5.4)               ← blocking
+  9. e2e                  (playwright)
 
 on: push to main
-  9.  migrate             (drizzle-kit, forward-only)
-  10. deploy              (Vercel)
-  11. refresh-views       (REFRESH MATERIALIZED VIEW CONCURRENTLY)
-  12. ping IndexNow       (changed URLs from change_log since last deploy)
+  10. migrate             (drizzle-kit, forward-only)
+  11. deploy              (Vercel)
+  12. refresh-views       (REFRESH MATERIALIZED VIEW CONCURRENTLY)
+  13. ping IndexNow       (changed URLs from change_log since last deploy)
 ```
 
 Steps 6 and 7 being blocking is the whole point: it is structurally impossible to ship a page that Google cannot read, or one that breaks the performance budget.

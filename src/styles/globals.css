@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './tokens.css';
+@import './ads.css';
 
 /**
  * `inline` makes the generated utilities reference the custom property rather than

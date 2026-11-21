@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { formatRate } from '@/common/money'
 import { bp, effectiveRate } from '@/common/money'
 import { Badge, Breadcrumbs, Lane } from '@/common/ui'
-import { getAllGateways, getVerifiedGateways } from '@/modules/pricing'
+import { METHOD_PAGES, getAllGateways, getVerifiedGateways } from '@/modules/pricing'
 import { buildMetadata } from '@/modules/seo'
 
 /**
@@ -119,6 +119,26 @@ export default function ChargesHubPage() {
           </ul>
         </section>
       )}
+
+      <section className="mt-10">
+        <h2>By payment method</h2>
+        <p className="mt-2 max-w-[64ch] text-body-sm text-fg-muted">
+          Every provider ranked on one method at a time, which is usually the faster way in if
+          most of your money arrives one way.
+        </p>
+        <ul className="mt-3 grid list-none gap-2 p-0 sm:grid-cols-2 lg:grid-cols-3">
+          {METHOD_PAGES.map((m) => (
+            <li key={m.slug}>
+              <Link
+                href={`/charges/${m.slug}/`}
+                className="flex min-h-11 items-center rounded-md border border-border-default bg-surface px-3 text-body-sm no-underline"
+              >
+                {m.h1}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <p className="mt-6 text-body-sm">
         <Link href="/calculator/">Work out your own cost with the calculator</Link> &middot;{' '}

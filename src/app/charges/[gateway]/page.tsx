@@ -8,6 +8,7 @@ import {
   DraftBanner,
   SOURCE_KIND_LABEL,
   FeeTable,
+  METHOD_PAGES,
   activePromos,
   getAllGateways,
   getGatewayBySlug,
@@ -185,6 +186,17 @@ export default async function GatewayChargesPage({ params }: Params) {
         This is a starting point, not a quote. Rates move with volume and several providers price
         by business category, so what you&rsquo;re offered may differ. Get it in writing.
       </Callout>
+
+      <section className="mt-10">
+        <h2>Compare one method across providers</h2>
+        <ul className="mt-3 grid list-none gap-2 p-0 text-body-sm sm:grid-cols-2">
+          {METHOD_PAGES.map((m) => (
+            <li key={m.slug}>
+              <Link href={`/charges/${m.slug}/`}>{m.h1}</Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section className="mt-10">
         <h2>Compared with</h2>

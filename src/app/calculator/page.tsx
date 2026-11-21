@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import { rupees } from '@/common/money'
 import { Breadcrumbs, Lane } from '@/common/ui'
-import { CalculatorResults, DEFAULT_MIX, SCENARIOS, rankGateways } from '@/modules/calculator'
+import { InteractiveCalculator, SCENARIOS } from '@/modules/calculator'
 import { getVerifiedGateways } from '@/modules/pricing'
 import { buildMetadata } from '@/modules/seo'
 
@@ -17,16 +16,8 @@ export function generateMetadata() {
   })
 }
 
-const DEFAULT_INPUT = {
-  monthlyVolumePaise: rupees(500_000),
-  avgTransactionPaise: rupees(1_500),
-  mix: DEFAULT_MIX,
-  includeSetupFee: false,
-}
-
 export default function CalculatorPage() {
   const gateways = getVerifiedGateways()
-  const { ranked, incomparable } = rankGateways(gateways, DEFAULT_INPUT)
 
   return (
     <Lane size="wide" className="py-8">
@@ -45,19 +36,14 @@ export default function CalculatorPage() {
       </p>
 
       <div className="mt-8">
-        <CalculatorResults
-          ranked={ranked}
-          incomparable={incomparable}
-          input={DEFAULT_INPUT}
-          heading="Cost at ₹5 lakh a month, balanced payment mix"
-        />
+        <InteractiveCalculator gateways={gateways} />
       </div>
 
       <section className="mt-10">
         <h2>Other volumes</h2>
         <p className="mt-2 text-body-sm text-fg-muted">
-          Pick whichever is closest to your business. Sliders are coming. These cover the usual
-          cases in the meantime.
+          Shareable pages for the common cases, if you would rather send someone a link than
+          describe where you put the sliders.
         </p>
         <ul className="mt-4 grid list-none gap-3 p-0 md:grid-cols-2">
           {SCENARIOS.map((s) => (

@@ -1,4 +1,5 @@
-import { METHOD_LABEL, type Fee, type FeeMethod } from '../domain/pricing.schema'
+import { METHOD_LABEL, type FeeMethod } from '../domain/pricing.constants'
+import type { Fee } from '../domain/pricing.schema'
 import { FeeRate } from './fee-rate'
 
 /**

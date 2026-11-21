@@ -9,6 +9,7 @@ const NAV = [
   { href: '/compare/', label: 'Compare' },
   { href: '/best/', label: 'Best for' },
   { href: '/calculator/', label: 'Calculator' },
+  { href: '/tools/', label: 'Tools' },
   { href: '/upi/mdr-tracker/', label: 'UPI MDR' },
   { href: '/methodology/', label: 'Methodology' },
 ]
@@ -25,7 +26,7 @@ export function SiteHeader() {
   return (
     <header className="border-b border-border-default bg-surface">
       <Lane size="wide" className="py-2">
-        <div className="relative flex min-h-11 items-center justify-between gap-3">
+        <div className="relative flex min-h-11 flex-wrap items-center justify-between gap-3">
           <Link href="/" className="font-semibold no-underline text-fg">
             onlinepayment<span className="text-accent">.in</span>
             <span className="sr-only"> — {SITE_NAME} home</span>

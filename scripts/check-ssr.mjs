@@ -63,6 +63,13 @@ const ASSERTIONS = [
     path: '/calculator/',
     mustContain: [
       'cost calculator', '<table', 'Assumptions', 'Cheapest for this volume',
+      // The calculator is interactive, but its DEFAULT results must be in the
+      // raw HTML. A calculator whose output only appears after hydration is
+      // invisible to search, which is the usual reason tool pages get no
+      // traffic. These strings only exist if the engine ran on the server.
+      'a year vs cheapest', 'See breakdown', 'Total first-year cost',
+      // and the controls themselves
+      'Monthly volume', 'Payment mix', 'type="range"',
     ],
     noindex: false,
   },
@@ -70,6 +77,16 @@ const ASSERTIONS = [
     path: '/calculator/50-thousand-monthly-upi-heavy/',
     mustContain: ['<table', 'Total first-year cost'],
     noindex: false,
+  },
+  {
+    // A static segment must beat the [gateway] dynamic route here, or
+    // /charges/upi/ would be looked up as a provider slug and 404.
+    path: '/charges/upi/',
+    mustContain: ['UPI payment gateway charges', 'Razorpay', 'With 18% GST', 'Every provider on this method'],
+  },
+  {
+    path: '/charges/international/',
+    mustContain: ['International payment charges', '4.99%', 'CCAvenue'],
   },
   {
     path: '/compare/',
@@ -112,6 +129,91 @@ const ASSERTIONS = [
     ],
     noindex: false,
   },
+
+  // ---------------------------------------------------------------- tools ----
+  // Every tool needs JavaScript to be USED, but none of them may need it to be
+  // READ. Each assertion below targets reference content that only exists if
+  // the server rendered the page's data — the formulas, the IIN ranges, the
+  // working-day rules, the bank-code table. A tool page that renders only
+  // after hydration is a tool page nobody finds.
+  {
+    path: '/tools/',
+    mustContain: [
+      'Payments developer tools',
+      'Payment webhook signature verifier',
+      'Card BIN and IIN checker',
+      'Payment settlement date calculator',
+      'IFSC code checker',
+      'Runs in your browser',
+    ],
+    noindex: false,
+  },
+  {
+    path: '/tools/webhook-signature-verifier/',
+    mustContain: [
+      'Payment webhook signature verifier',
+      // The four documented formulas must be in the HTML, not behind the form.
+      'HMAC-SHA256( raw_request_body, webhook_secret )',
+      'x-webhook-timestamp + raw_request_body',
+      'SALT|status||||||udf5|udf4|udf3|udf2|udf1',
+      'sha256( username:password )',
+      'X-Razorpay-Signature',
+      // The documentation contradiction is content, not a footnote.
+      'contradicts itself',
+      // The default scheme's inputs render server-side.
+      'The string being signed',
+      'SoftwareApplication',
+    ],
+    noindex: false,
+  },
+  {
+    path: '/tools/bin-lookup/',
+    mustContain: [
+      'Card BIN and IIN checker',
+      'Published IIN ranges',
+      'Mastercard',
+      '2221\u20132720',
+      'RuPay',
+      // The cross-provider MDR table is the unique data on this page.
+      'What a card costs you, by type',
+      'Razorpay',
+      'What a BIN cannot tell you',
+      'razorpay/ifsc',
+    ],
+    noindex: false,
+  },
+  {
+    path: '/tools/settlement-calculator/',
+    mustContain: [
+      'Payment settlement date calculator',
+      'Second and fourth Saturday',
+      'What counts as a working day',
+      // The default capture date must produce a server-rendered result: this
+      // string only exists if the engine ran on the server.
+      'Money reaches your account',
+      '30 November 2026',
+      'Day by day',
+      'Republic Day',
+      // The Razorpay T+1/T+2 conflict must be disclosed, not resolved silently.
+      'T+2 (settlement docs)',
+    ],
+    noindex: false,
+  },
+  {
+    path: '/tools/ifsc/',
+    mustContain: [
+      'IFSC code checker',
+      'How an IFSC is built',
+      'Branch code',
+      'no check digit',
+      // The bank-code table is the indexable substance of this page.
+      'HDFC Bank',
+      'State Bank of India',
+      'Bank codes',
+      'sublet',
+    ],
+    noindex: false,
+  },
 ]
 
 const EXTRA = [
@@ -138,6 +240,13 @@ const SITEMAP_MUST_INCLUDE = [
   '/best/small-business/',
   '/calculator/',
   '/upi/mdr-tracker/',
+  '/charges/upi/',
+  '/charges/international/',
+  '/tools/',
+  '/tools/webhook-signature-verifier/',
+  '/tools/bin-lookup/',
+  '/tools/settlement-calculator/',
+  '/tools/ifsc/',
 ]
 
 let failures = 0
