@@ -11,7 +11,7 @@ export type AdPolicy = Readonly<Record<PageType, readonly SlotId[]>>
  * is an invariant in `domain/` rather than a default in config — a well-meaning
  * config edit should not be able to undo it. TECHNICAL.md §6.4.
  */
-export const ALWAYS_AD_FREE: readonly PageType[] = ['methodology', 'disclosure']
+export const ALWAYS_AD_FREE: readonly PageType[] = ['methodology', 'disclosure', 'dataset']
 
 export function isAlwaysAdFree(pageType: PageType): boolean {
   return ALWAYS_AD_FREE.includes(pageType)

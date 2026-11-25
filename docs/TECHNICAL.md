@@ -89,6 +89,7 @@ onlinepayment-portal/
 │   ├── verify-pricing.ts             # scrape + diff + flag for human confirm
 │   ├── check-ssr.ts                  # CI crawlability assertions (§5.1)
 │   ├── check-bundle.mjs              # client-bundle guard (§5.4)
+│   ├── check-links.mjs               # internal link resolution (§5.1)
 │   └── refresh-views.ts
 ├── tests/
 │   ├── unit/
@@ -630,6 +631,7 @@ Weighted by what actually breaks the business, not by coverage percentage.
 | Repositories | Vitest + Testcontainers Postgres | Real SQL against a real schema. No mocked DB. |
 | SEO contracts | Vitest + `scripts/check-ssr.ts` | Raw-HTML assertions, one `<h1>`, canonical, JSON-LD validity (§5.1) |
 | Client bundle | `scripts/check-bundle.mjs` | Per-route gzipped budget, and no server-only module (zod, `node:fs`, drizzle, seed records) in any shipped chunk |
+| Internal links | `scripts/check-links.mjs` | Every internal `href` resolves 200 with no redirect, every `#fragment` has an id, sitemap and link graph agree both ways |
 | Components | React Testing Library | Fee tables, AdSlot reservation, VerifiedAt rendering |
 | E2E | Playwright | Calculator flow, scenario URL round-trip, mobile layout |
 | Visual | Playwright screenshots | The four key templates, light + dark |
@@ -706,17 +708,20 @@ on: pull_request
   5. build                (next build)
   6. check-ssr            (raw-HTML assertions — §5.1)      ← blocking
   7. check-bundle         (client-bundle guard — §5.4)      ← blocking
-  8. lighthouse-ci        (budgets from §5.4)               ← blocking
-  9. e2e                  (playwright)
+  8. check-links          (internal link resolution — §5.1) ← blocking
+  9. lighthouse-ci        (budgets from §5.4)               ← blocking
+  10. e2e                 (playwright)
 
 on: push to main
-  10. migrate             (drizzle-kit, forward-only)
-  11. deploy              (Vercel)
-  12. refresh-views       (REFRESH MATERIALIZED VIEW CONCURRENTLY)
-  13. ping IndexNow       (changed URLs from change_log since last deploy)
+  11. migrate             (drizzle-kit, forward-only)
+  12. deploy              (Vercel)
+  13. refresh-views       (REFRESH MATERIALIZED VIEW CONCURRENTLY)
+  14. ping IndexNow       (changed URLs from change_log since last deploy)
 ```
 
-Steps 6 and 7 being blocking is the whole point: it is structurally impossible to ship a page that Google cannot read, or one that breaks the performance budget.
+Steps 6 to 8 being blocking is the whole point: it is structurally impossible to ship a page that Google cannot read, one that breaks the performance budget, or one that links somewhere that is not there.
+
+**check-ssr, check-bundle and check-links all read a production build, and two of the three read it through a running server.** Start that server *after* the build. A `next start` left over from an earlier build keeps port 3000 and answers every assertion from stale HTML, so all three checks pass against code that is no longer there — and `pkill -f "next start"` does not end it, because the process renames itself `next-server`. Kill it by port: `kill $(lsof -ti:3000)`.
 
 ---
 
@@ -733,7 +738,7 @@ A PR adding or changing an indexable page is not done until:
 - [ ] Every pricing figure links to its primary source
 - [ ] Pricing in a real `<table>`
 - [ ] Registered in the correct sitemap segment with a true `lastmod`
-- [ ] Internal links in and out — no orphan
+- [ ] Internal links in and out — no orphan (enforced by `check-links.mjs`)
 - [ ] Carries ≥1 unique data point vs its parent hub (BUILD-PLAN §5.3)
 - [ ] Ad policy entry set for its page type (even if that entry is `[]`)
 - [ ] Added to `check-ssr.ts` assertions if it is a new template

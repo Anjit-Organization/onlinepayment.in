@@ -10,16 +10,13 @@ const GROUPS: { heading: string; links: { href: string; label: string }[] }[] = 
       { href: '/compare/', label: 'Comparisons' },
       { href: '/best/', label: 'Best by business type' },
       { href: '/calculator/', label: 'Cost calculator' },
-      { href: '/data/changelog/', label: 'Changelog' },
+      { href: '/tools/', label: 'Developer tools' },
+      { href: '/data/', label: 'Download the dataset' },
     ],
   },
   {
     heading: 'UPI',
-    links: [
-      { href: '/upi/mdr-tracker/', label: 'MDR tracker' },
-      { href: '/upi/limits/', label: 'Transaction limits' },
-      { href: '/upi/rules/', label: 'Rule changes' },
-    ],
+    links: [{ href: '/upi/mdr-tracker/', label: 'MDR tracker' }],
   },
   {
     heading: 'About',

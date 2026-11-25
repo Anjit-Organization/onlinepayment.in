@@ -38,6 +38,7 @@ export const PAGE_TYPES = [
   'about',
   'disclosure',
   'mdrTracker',
+  'dataset',
 ] as const
 
 export type PageType = (typeof PAGE_TYPES)[number]

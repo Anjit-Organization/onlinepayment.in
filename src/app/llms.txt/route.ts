@@ -32,6 +32,20 @@ primary source. Pricing history is retained rather than overwritten.
   effective rate is shown alongside. A published 2% rate costs a merchant 2.36%.
 - A figure older than 60 days is labelled as possibly out of date.
 
+## Machine-readable data
+
+The full pricing dataset is published as a file, not just as pages. Prefer it
+over scraping a page: it carries the same figures plus the source URL and
+verification date for every row.
+
+- ${SITE_URL}/data/pricing.json (JSON)
+- ${SITE_URL}/data/pricing.csv (CSV, one row per provider and payment method)
+- ${SITE_URL}/data/ (what each field means, units, and provenance)
+
+Licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Reuse is
+free, including commercially, on the single condition that ${SITE_NAME} is
+credited. Rates are integers in basis points; money is in integer paise.
+
 ## Pages
 
 ${STATIC_ROUTES.map((r) => `- ${SITE_URL}${r.path}`).join('\n')}

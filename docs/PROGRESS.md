@@ -10,17 +10,19 @@ Newest phase at the top. Update this at the end of every phase.
 | | |
 |---|---|
 | **Live at** | https://www.onlinepayment.in (apex 308s to www) |
-| **Indexable pages** | 68 |
+| **Indexable pages** | 69 |
 | **Providers covered** | 8, all verified |
-| **Tests / SSR assertions** | 107 / 249 |
+| **Tests / SSR assertions** | 151 / 274 |
+| **Internal links** | 71 targets, 69 fragments, 0 broken — guarded |
 | **Client JS** | 177 KB gzipped floor, 191 KB worst route, 200 KB budget — guarded |
-| **Current phase** | 3 — dev tools live, public dataset next |
+| **Current phase** | 3 — complete. Dataset published, link graph guarded; Phase 4 not started |
 
 ---
 
-## Phase 3 — in progress
+## Phase 3 — done
 
-**Goal:** more indexable surface against method-level queries, then dev tools.
+**Goal:** more indexable surface against method-level queries, then dev tools,
+then make the data itself citable.
 
 - [x] **Method pages** — `/charges/upi/`, `/credit-card/`, `/debit-card/`,
       `/netbanking/`, `/international/`. Each ranks all 8 providers on one
@@ -148,7 +150,116 @@ even if a caller sends one. `/api/ifsc/[code]` proxies the public IFSC API,
 validating against an anchored pattern before the code reaches a URL and
 mapping the response field by field rather than passing a third-party object
 through to the browser.
-- [ ] `/data/` — public dataset endpoint + `Dataset` JSON-LD
+- [x] **Public dataset** — `/data/` plus `pricing.json` and `pricing.csv`.
+      Sitemap 68 → 69.
+
+**Why give away the thing we rank for.** A compilation nobody can cite is a
+compilation nobody links to. An assistant answering "what does Razorpay charge
+for UPI" needs a figure it can attribute; a developer pricing a checkout wants a
+file, not a table to retype. Publishing under **CC BY 4.0** makes attribution a
+licence condition rather than a hope, and the licence URL pins the version
+because Google's guidance marks the version-less form as not recommended.
+
+What the licence actually covers is stated on the page rather than implied: a
+rate of 2% is a fact and facts are nobody's property. Ours is the compilation —
+which providers, which methods, the GST-inclusive figure worked out for each,
+and the verification date and source pinned to every row.
+
+**Version is derived, not stamped.** `version` is the newest `verifiedAt` in the
+data, never a build timestamp. A timestamp would change the bytes on every
+deploy: every consumer's cache would miss, every diff would be noise, and nobody
+could tell a redeploy from a repricing. Providers are sorted by slug for the same
+reason — seed file order must not move the output. A test asserts both.
+
+**Two shapes, because there are two readers.** JSON keeps the full structure
+(fixed costs, settlement cycles, promos, recorded rate changes, third-party
+source attributions). CSV flattens to one row per provider and method — 63 rows,
+21 columns — which is what a spreadsheet wants. Escaping is RFC 4180 and tested
+against a real parser, because one unescaped comma in a note shifts every column
+after it and silently corrupts somebody's analysis.
+
+**CORS is open** on both files. Published data a browser cannot fetch is data
+only a server can use, which excludes the people most likely to cite it. Both
+carry `x-license` and a `Link: rel="license"` header.
+
+**The landing page documents every field** — all 21 columns, the unit of each,
+the closed set of method identifiers, a provenance row per provider, and an
+explicit list of what the dataset does *not* contain (negotiated rates,
+providers who publish nothing, history from before this site existed). Google's
+guidance puts `Dataset` markup on the landing page, not the file, so that is
+where it is: 4 JSON-LD blocks, Dataset among them, with both required properties
+and eleven recommended ones including version-pinned `license`, open-ended
+`temporalCoverage`, `variableMeasured` and two `DataDownload` distributions.
+
+**`/data/` carries no ads**, enforced rather than merely omitted: `dataset` is a
+new page type in `ALWAYS_AD_FREE`. An ad beside the dataset is worth a fraction
+of a cent; being the source someone is willing to name is worth more.
+
+**llms.txt now points at the file**, with the licence and the attribution line,
+so an assistant has no reason to scrape a page instead.
+
+**Three broken footer links, found and fixed.** The footer linked to
+`/data/changelog/`, `/upi/limits/` and `/upi/rules/`. None of the three has ever
+existed — every one was a 404 served to anything that followed it. The changelog
+link now points at `/data/`; the two UPI links are gone until those pages do
+exist. The check that would have caught them is below.
+
+### Internal link check — `scripts/check-links.mjs`
+
+Three footer links served a 404 from the day they were written, and 274
+crawlability assertions did not notice. They could not: every one of them checks
+what a page **contains**, and a broken link is a page containing exactly what it
+should — an `<a href>`. Nothing was looking at the other end of it.
+
+A dead internal link is worse than a missing page. It burns crawl budget, leaks
+whatever authority the linking page had into nothing, and tells a reader who
+trusted a navigation element that the site does not know its own shape. On a
+site whose whole proposition is that the figures are checked, that is not
+cosmetic.
+
+`npm run check:links` crawls every URL in the sitemap and asserts six things:
+
+| | Assertion | Why it is separate |
+|---|---|---|
+| 1 | Every sitemap URL returns 200 | A 404 in the sitemap is a page handed to Google that is not there |
+| 2 | Every internal `href` returns 200 | The original defect |
+| 3 | No internal link **redirects** | With `trailingSlash: true` a link to `/charges` answers 308 first. The fix is different — add the slash — so it is its own failure class |
+| 4 | Every `#fragment` has a matching `id` | An anchor into a renamed heading lands the reader at the top of the page with no sign anything went wrong |
+| 5 | No sitemap page is an orphan | A page nothing links to is one Google is asked to rank on a sitemap entry alone |
+| 6 | Nothing linked is missing from the sitemap | The direction that actually bites: a page gets written and linked, the sitemap gating is forgotten, and it ships unsubmitted |
+
+Current result: **71 targets, 69 fragments, 69 sitemap pages — all clean, no
+orphans, no redirects.** The only linked paths absent from the sitemap are
+`pricing.json` and `pricing.csv`, allowlisted because they are files, not pages:
+no canonical, no title, nothing to rank.
+
+**External links are never fetched**, deliberately. They would make a blocking
+CI step depend on other people's uptime and rate limits, which turns it into a
+coin flip. Source link rot is real, but it is a scheduled job's problem.
+
+**Every one of the six was proven by watching it fail.** A guard nobody has seen
+fail is not a guard. Restoring `/upi/limits/` in the footer produced the 404
+failure; misspelling the skip-link target produced the fragment failure; a stub
+server produced the redirect, orphan and unsubmitted-page failures.
+
+Two things that cost real time, both worth knowing:
+
+- **Next's `<Link>` silently normalises a slashless `href`.** Writing
+  `href="/charges"` renders `/charges/`, so the redirect defect could not be
+  reproduced through a component at all — hence the stub server. The assertion
+  still earns its place: a raw `<a>`, or an href built from data, is not
+  normalised.
+- **A stale `next start` answered every assertion from the previous build.** It
+  held port 3000, the new server failed to bind with `EADDRINUSE`, and all three
+  checks passed against code that was no longer there. `pkill -f "next start"`
+  does not end it, because the process renames itself `next-server`. Kill it by
+  port. Noted in TECHNICAL.md §9, because it can make any of the three checks
+  report a clean pass on a defect.
+
+The first report was unreadable for a different reason: one misspelled
+fragment in the root layout produced 69 identical failures, one per page, which
+buried anything sitting underneath. Failures now group by **defect** rather than
+by occurrence — one line, with a count and the first four places it appears.
 
 **Client-boundary note:** the pricing barrel re-exports the seed repository,
 which imports `node:fs`. Importing anything from it inside a `'use client'`
@@ -234,3 +345,6 @@ Deployed, mapped the domain, and fixed what that exposed.
 | No crossovers in the data | Only CCAvenue has a fixed fee (₹1,200). Cashfree's unstated annual charge is the figure most likely to create one. |
 | `onlinepayment-in.vercel.app` serves production | Canonical folds it in, but it is a live duplicate host. |
 | Double opt-in not wired | `confirmed_at` modelled; no email sender configured. |
+| No image or asset link check | `check-links` covers `<a href>` only. A broken `<img src>` or a missing OG image would not be caught. |
+| External source links unchecked | Deliberately out of CI; every pricing figure cites a provider URL and link rot there is invisible until someone follows one. Belongs in a scheduled job, not a build. |
+| Dataset has no changelog surface | The `changes` array ships inside the dataset, but there is no `/data/changelog/` page rendering it. The footer link to one has been removed rather than left 404ing. |

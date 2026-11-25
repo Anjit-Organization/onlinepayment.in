@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/common/config'
 import { SCENARIOS, USE_CASES } from '@/modules/calculator'
 import { allPairs, pairSlug } from '@/modules/compare'
+import { buildDataset } from '@/modules/dataset'
 import { METHOD_PAGES, getVerifiedGateways } from '@/modules/pricing'
 import { getTracker } from '@/modules/regulatory'
 import { TOOLS } from '@/modules/tools'
@@ -142,6 +143,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(t.lastModified),
       changeFrequency: 'monthly',
       priority: 0.7,
+    })
+  }
+
+  /**
+   * The dataset landing page. It is a projection of the same verified records
+   * the hubs render, so it publishes on the same condition, and its lastModified
+   * is the dataset's own version — the newest verifiedAt in the data.
+   */
+  if (canPublishHubs) {
+    entries.push({
+      url: `${SITE_URL}/data/`,
+      lastModified: new Date(buildDataset(verified, SITE_URL).version),
+      changeFrequency: 'weekly',
+      priority: 0.8,
     })
   }
 

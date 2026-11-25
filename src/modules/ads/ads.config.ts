@@ -115,6 +115,10 @@ export const AD_POLICY: AdPolicy = {
   about: [],
   disclosure: [],
   mdrTracker: [],
+  // The dataset's whole value is being cited by other people's work. An ad
+  // beside it is worth a fraction of a cent; being the source a journalist or
+  // an assistant is willing to name is worth considerably more.
+  dataset: [],
 }
 
 /**

@@ -214,12 +214,48 @@ const ASSERTIONS = [
     ],
     noindex: false,
   },
+  {
+    // The dataset's canonical landing page. Dataset JSON-LD belongs here, per
+    // Google's guidance, and the download links must be in the raw HTML — a
+    // dataset page whose links only appear after hydration is a dataset no
+    // crawler can follow to the file.
+    path: '/data/',
+    mustContain: [
+      'Indian payment gateway pricing dataset',
+      '"@type":"Dataset"',
+      '"@type":"DataDownload"',
+      '/data/pricing.json',
+      '/data/pricing.csv',
+      // The licence URL must pin a version; the version-less form is the one
+      // Google explicitly marks as not recommended.
+      'https://creativecommons.org/licenses/by/4.0/',
+      // Field documentation is the page's indexable substance.
+      'effective_rate_bp_incl_gst',
+      'settlement_cycle_days',
+      // Provenance table.
+      'Official rate card',
+      'Negotiated rates',
+    ],
+    noindex: false,
+  },
 ]
 
 const EXTRA = [
   { path: '/robots.txt', mustContain: ['GPTBot', 'Sitemap:'] },
   { path: '/sitemap.xml', mustContain: ['<urlset', '/methodology/'] },
   { path: '/llms.txt', mustContain: ['Ranking is never sold', 'Corrections:'] },
+  // llms.txt must point assistants at the file rather than at a page to scrape.
+  { path: '/llms.txt', mustContain: ['/data/pricing.json', 'CC BY 4.0'] },
+  // The dataset files themselves. Asserting a provider slug and a GST-inclusive
+  // figure proves the projection actually ran, not merely that a route exists.
+  {
+    path: '/data/pricing.json',
+    mustContain: ['"razorpay"', '"effectiveRateBp"', '"sourceUrl"', 'CC-BY-4.0'],
+  },
+  {
+    path: '/data/pricing.csv',
+    mustContain: ['provider_slug,provider_name', 'effective_rate_bp_incl_gst', 'razorpay,Razorpay,upi'],
+  },
 ]
 
 /** Paths that must NOT appear in the sitemap while their data is unverified. */
@@ -247,6 +283,7 @@ const SITEMAP_MUST_INCLUDE = [
   '/tools/bin-lookup/',
   '/tools/settlement-calculator/',
   '/tools/ifsc/',
+  '/data/',
 ]
 
 let failures = 0

@@ -20,7 +20,8 @@
     "db:studio": "drizzle-kit studio",
     "check:ssr": "node scripts/check-ssr.mjs",
     "analyze": "ANALYZE=true next build",
-    "check:bundle": "node scripts/check-bundle.mjs"
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
