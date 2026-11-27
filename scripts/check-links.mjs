@@ -29,9 +29,12 @@
  *      Google is being asked to rank on the strength of a sitemap entry alone,
  *      with no internal signal that the site considers it worth reaching.
  *   6. Nothing is linked that the sitemap omits, apart from the download files
- *      in NOT_IN_SITEMAP. This is the direction that actually bites: a new page
- *      gets written and linked, and the sitemap gating is forgotten, so it ships
- *      and is never submitted.
+ *      in NOT_IN_SITEMAP and pages deliberately withheld for being stale. This
+ *      is the direction that actually bites: a new page gets written and linked,
+ *      and the sitemap gating is forgotten, so it ships and is never submitted.
+ *   7. A page past the block threshold is NOT in the sitemap. /methodology/
+ *      promises it is withheld, so finding one there means the promise is being
+ *      broken — the inverse of 6, and the reason 6 cannot simply allowlist them.
  *
  * WHAT IT DELIBERATELY DOES NOT DO
  *   - External links are never fetched. They would make the check depend on
@@ -42,6 +45,8 @@
  *
  * Usage: node scripts/check-links.mjs [baseUrl]
  */
+
+import { withheldPath, withheldSlugs } from './lib/staleness.mjs'
 
 const BASE = (process.argv[2] ?? process.env.CHECK_SSR_BASE ?? 'http://localhost:3000').replace(/\/$/, '')
 const ORIGIN = new URL(BASE).origin
@@ -253,11 +258,50 @@ const orphans = [...sitemapPaths].filter((p) => p !== '/' && !linkedPaths.has(p)
 if (orphans.length === 0) pass('links', `no orphans: all ${sitemapPaths.size} sitemap pages are linked`)
 else for (const p of orphans) fail(p, 'in the sitemap but nothing links to it — orphan page')
 
-const unlisted = [...linkedPaths].filter((p) => !sitemapPaths.has(p) && !NOT_IN_SITEMAP.includes(p)).sort()
-if (unlisted.length === 0) pass('links', 'every linked page is in the sitemap')
+/**
+ * Pages whose data is past the block threshold are absent from the sitemap ON
+ * PURPOSE — that is the 90-day promise on /methodology/, enforced in sitemap.ts.
+ * Reading the seed here rather than allowlisting by hand means the two cannot
+ * disagree: a page is excused exactly while the sitemap is right to omit it,
+ * and the moment someone re-checks the figure it is expected back.
+ */
+let withheld
+try {
+  withheld = withheldSlugs()
+} catch (e) {
+  // A bad seed or a moved threshold must read like every other failure in this
+  // script, not like a crash after seventy passing assertions.
+  fail('seed', e.message)
+  withheld = new Set()
+}
+
+const unlisted = [...linkedPaths]
+  .filter((p) => !sitemapPaths.has(p) && !NOT_IN_SITEMAP.includes(p))
+  .sort()
+
+const forgotten = unlisted.filter((p) => withheldPath(p, withheld) === null)
+const excused = unlisted.filter((p) => withheldPath(p, withheld) !== null)
+
+if (forgotten.length === 0)
+  pass('links', 'every linked page is in the sitemap, or withheld on purpose')
 else
-  for (const p of unlisted)
+  for (const p of forgotten)
     fail(p, 'linked internally but missing from the sitemap — it will never be submitted')
+
+for (const p of excused) {
+  pass('links', `${p} absent from sitemap: ${withheldPath(p, withheld)} is past the block threshold`)
+}
+
+// The inverse. A stale page still being submitted is the promise broken the
+// other way round, and it is the direction nobody would notice.
+const stillListed = [...sitemapPaths].filter((p) => withheldPath(p, withheld) !== null).sort()
+if (withheld.size > 0) {
+  if (stillListed.length === 0)
+    pass('links', `${withheld.size} withheld provider(s) correctly absent from the sitemap`)
+  else
+    for (const p of stillListed)
+      fail(p, `in the sitemap although ${withheldPath(p, withheld)} is past the block threshold`)
+}
 
 console.log('')
 if (failures > 0) {

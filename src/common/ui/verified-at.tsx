@@ -1,5 +1,5 @@
-import { STALE_ALERT_DAYS, STALE_WARN_DAYS } from '../config'
 import { daysSince, formatIST, toISODate } from '../datetime'
+import { freshnessOfAge, type Freshness } from '../staleness'
 import { ExternalLink } from './external-link'
 
 /**
@@ -12,10 +12,17 @@ import { ExternalLink } from './external-link'
  */
 export type VerifiedAtVariant = 'inline' | 'block' | 'compact'
 
-function tone(ageDays: number): { dot: string; text: string } {
-  if (ageDays <= STALE_WARN_DAYS) return { dot: 'bg-fresh', text: 'text-fg-muted' }
-  if (ageDays <= STALE_ALERT_DAYS) return { dot: 'bg-warn', text: 'text-fg-muted' }
-  return { dot: 'bg-danger', text: 'text-danger' }
+/**
+ * Colour follows the published policy rather than its own copy of the
+ * boundaries. `blocked` looks the same as `alert` deliberately: a reader does
+ * not care whether we are still submitting the page to Google, only that the
+ * figure is old. The distinction matters to the sitemap, not to the badge.
+ */
+const TONE: Record<Freshness, { dot: string; text: string }> = {
+  current: { dot: 'bg-fresh', text: 'text-fg-muted' },
+  warn: { dot: 'bg-warn', text: 'text-fg-muted' },
+  alert: { dot: 'bg-danger', text: 'text-danger' },
+  blocked: { dot: 'bg-danger', text: 'text-danger' },
 }
 
 export function VerifiedAt({
@@ -38,8 +45,9 @@ export function VerifiedAt({
 }) {
   const age = daysSince(date)
   const isDraft = state === 'draft'
-  const t = isDraft ? { dot: 'bg-danger', text: 'text-danger' } : tone(age)
-  const isStale = !isDraft && age > STALE_ALERT_DAYS
+  const freshness = freshnessOfAge(age)
+  const t = isDraft ? { dot: 'bg-danger', text: 'text-danger' } : TONE[freshness]
+  const isStale = !isDraft && (freshness === 'alert' || freshness === 'blocked')
 
   const size = variant === 'block' ? 'text-body-sm' : 'text-caption'
 

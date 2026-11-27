@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/common/config'
+import { isSitemapBlocked } from '@/common/staleness'
 import { SCENARIOS, USE_CASES } from '@/modules/calculator'
 import { allPairs, pairSlug } from '@/modules/compare'
 import { buildDataset } from '@/modules/dataset'
@@ -26,11 +27,49 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }))
 
-  const verified = getVerifiedGateways()
+  const allVerified = getVerifiedGateways()
+
+  /**
+   * The 90-day promise, kept. /methodology/ tells readers: "past 90 days, we
+   * pull the page from our sitemap until someone re-checks it." Until this
+   * filter existed that sentence was true of nothing — `STALE_BLOCK_DAYS` was
+   * imported by exactly one file, the one printing the sentence.
+   *
+   * Withheld, NOT unpublished. The page still renders, still answers 200 and
+   * keeps whatever position it holds; it simply stops being submitted, and it
+   * returns the moment someone re-checks it. Going further and adding noindex
+   * would throw away earned ranking over a figure that is merely old and
+   * already labelled as such on the page.
+   *
+   * `npm run verify:queue` fails the build before this can bite, because every
+   * provider was verified on the same day and so crosses every threshold on the
+   * same day. Reaching the block threshold unnoticed would empty most of the
+   * sitemap at once.
+   */
+  const verified = allVerified.filter((g) => !isSitemapBlocked(new Date(g.verifiedAt)))
+
   // Hubs publish once there is verified data to show. They render ONLY verified
   // providers, so an unverified provider cannot leak onto an indexed page —
   // which is what the old "every provider verified" gate was protecting against.
   // That gate could never open: CCAvenue publishes no public rate card at all.
+  //
+  // WHAT WITHHOLDING DOES AND DOES NOT REACH. Using the unblocked set here
+  // means a withheld provider stops generating URLs: its own page goes, and so
+  // do its `/compare/` pairs, which are built from these slugs. It does NOT
+  // reach the aggregate pages. `/charges/`, the method pages, `/best/*`,
+  // `/calculator/*` and the two pricing tools each call `getVerifiedGateways()`
+  // themselves, with no staleness filter, so they keep rendering a withheld
+  // provider's figure and stay in the sitemap.
+  //
+  // That is the intended trade, not an oversight: withholding every aggregate
+  // because one of eight providers went stale would deindex most of the site
+  // over a single unchecked rate card, and an aggregate page remains accurate
+  // about the other seven. The page-level promise on /methodology/ is kept
+  // where it was made — on the page whose figure is stale.
+  //
+  // The cost is that a 90-day figure is still visible on an indexed hub. The
+  // honest fix is to re-check it, which is what `npm run verify:queue` exists
+  // to force; see Known gaps in PROGRESS.md.
   const canPublishHubs = verified.length >= 2
 
   // Individual gateway pages: each gated on its own verification state.
@@ -150,11 +189,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
    * The dataset landing page. It is a projection of the same verified records
    * the hubs render, so it publishes on the same condition, and its lastModified
    * is the dataset's own version — the newest verifiedAt in the data.
+   *
+   * Built from `allVerified`, matching what /data/pricing.json actually serves:
+   * the dataset keeps ageing records rather than dropping them, because every
+   * row carries its own verifiedAt and a consumer can judge for itself. Silently
+   * shrinking a published dataset is worse than publishing a dated figure. If
+   * this used the unblocked set instead, the sitemap would advertise a
+   * lastModified the file does not have.
    */
   if (canPublishHubs) {
     entries.push({
       url: `${SITE_URL}/data/`,
-      lastModified: new Date(buildDataset(verified, SITE_URL).version),
+      lastModified: new Date(buildDataset(allVerified, SITE_URL).version),
       changeFrequency: 'weekly',
       priority: 0.8,
     })
